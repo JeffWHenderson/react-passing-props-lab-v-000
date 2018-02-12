@@ -1,40 +1,32 @@
-import React from 'react';
+import React, { Component }  from 'react';
 
-import FruitBasket from './FruitBasket';
+import Filter from './Filter';
+import FilteredFruitList from './FilteredFruitList.js';
 
-export default class App extends React.Component {
-  constructor(){
-    super()
-    this.state ={
+class FruitBasket extends Component {
+  constructor() {
+    super();
+
+    this.state = {
       filters: [],
-      currentFilter: null,
-      fruit: []
-    }
-  }
-  componentDidMount() {
-    fetch('/api/fruit')
-      .then(response => response.json())
-      .then(items => this.setState({ fruit }));
-  }
-  componentWillMount(){
-    this.fetchFilters
-  }
-
-  fetchFilters = () => {
-    fetch('/api/fruit_types')
-      .then(response => response.json())
-      .then(filters => this.setState({ filters: filters }));
+      selectedFilter: null
+    };
   }
 
   handleFilterChange = event => {
     console.log('new filter: ', event.target.value);
-    this.setState({ currentFilter: event.target.value });
+    this.setState({ selectedFilter: event.target.value });
   }
 
-  render(){
-    return(
-      <FruitBasket handleFilterChange={this.handleFilterChange} fetchFilters={this.fetchFilters}
-        state={this.state}/>
-    )
+  render() {
+    return (
+      <div className="fruit-basket">
+        <Filter handleChange={this.handleFilterChange} />
+        <FilteredFruitList
+          filter={this.state.selectedFilter} />
+      </div>
+    );
   }
 }
+
+export default FruitBasket;
